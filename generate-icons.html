@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Icons</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a2e; color: white; }
+        button { padding: 15px 30px; font-size: 18px; cursor: pointer; margin: 10px; }
+        .icons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .icon { text-align: center; }
+        canvas { border: 1px solid #333; }
+    </style>
+</head>
+<body>
+    <h1>Asteroid Crasher - Icon Generator</h1>
+    <p>Click the button to generate and download all app icons:</p>
+    <button onclick="generateAllIcons()">Generate & Download All Icons</button>
+    <div class="icons" id="iconContainer"></div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+
+        function drawIcon(ctx, size) {
+            const center = size / 2;
+            const scale = size / 512;
+
+            // Background
+            ctx.fillStyle = '#0a0a2e';
+            ctx.fillRect(0, 0, size, size);
+
+            // Stars
+            ctx.fillStyle = '#ffffff';
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * size;
+                const y = Math.random() * size;
+                const r = Math.random() * 2 * scale + 1;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Draw spaceship
+            ctx.save();
+            ctx.translate(center, center);
+            ctx.rotate(-Math.PI / 4);
+
+            const shipSize = size * 0.3;
+
+            // Ship body
+            ctx.fillStyle = '#00ff88';
+            ctx.beginPath();
+            ctx.moveTo(shipSize, 0);
+            ctx.lineTo(-shipSize * 0.7, -shipSize * 0.6);
+            ctx.lineTo(-shipSize * 0.4, 0);
+            ctx.lineTo(-shipSize * 0.7, shipSize * 0.6);
+            ctx.closePath();
+            ctx.fill();
+
+            // Thruster
+            ctx.fillStyle = '#ff6600';
+            ctx.beginPath();
+            ctx.moveTo(-shipSize * 0.4, -shipSize * 0.2);
+            ctx.lineTo(-shipSize * 0.9, 0);
+            ctx.lineTo(-shipSize * 0.4, shipSize * 0.2);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+
+            // Draw asteroid
+            ctx.save();
+            ctx.translate(size * 0.75, size * 0.25);
+
+            const asteroidSize = size * 0.12;
+            ctx.fillStyle = '#8B4513';
+            ctx.beginPath();
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const r = asteroidSize * (0.7 + Math.random() * 0.3);
+                const x = Math.cos(angle) * r;
+                const y = Math.sin(angle) * r;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+
+            // Draw another asteroid
+            ctx.save();
+            ctx.translate(size * 0.2, size * 0.8);
+
+            ctx.fillStyle = '#654321';
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2;
+                const r = asteroidSize * 0.7 * (0.7 + Math.random() * 0.3);
+                const x = Math.cos(angle) * r;
+                const y = Math.sin(angle) * r;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function generateIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Use fixed seed for consistent asteroids
+            Math.seedrandom && Math.seedrandom('asteroid-icon');
+
+            drawIcon(ctx, size);
+            return canvas;
+        }
+
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function generateAllIcons() {
+            const container = document.getElementById('iconContainer');
+            container.innerHTML = '';
+
+            sizes.forEach((size, index) => {
+                setTimeout(() => {
+                    const canvas = generateIcon(size);
+
+                    const div = document.createElement('div');
+                    div.className = 'icon';
+                    div.innerHTML = `<p>${size}x${size}</p>`;
+                    div.appendChild(canvas);
+                    container.appendChild(div);
+
+                    downloadCanvas(canvas, `icon-${size}.png`);
+                }, index * 300);
+            });
+        }
+
+        // Show preview on load
+        window.onload = function() {
+            const container = document.getElementById('iconContainer');
+            const canvas = generateIcon(192);
+            const div = document.createElement('div');
+            div.className = 'icon';
+            div.innerHTML = '<p>Preview (192x192)</p>';
+            div.appendChild(canvas);
+            container.appendChild(div);
+        };
+    </script>
+</body>
+</html>
