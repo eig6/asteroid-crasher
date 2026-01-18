@@ -243,29 +243,6 @@ class TouchControls {
         ctx.arc(this.joystick.stickX, this.joystick.stickY, this.joystick.stickRadius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Draw fire button
-        ctx.globalAlpha = this.fireButton.active ? 0.6 : 0.3;
-        ctx.fillStyle = '#ff4444';
-        ctx.beginPath();
-        ctx.arc(this.fireButton.x, this.fireButton.y, this.fireButton.radius, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Draw fire button border
-        ctx.globalAlpha = 0.7;
-        ctx.strokeStyle = '#ff4444';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(this.fireButton.x, this.fireButton.y, this.fireButton.radius, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Draw fire icon
-        ctx.globalAlpha = 0.9;
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 24px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('FIRE', this.fireButton.x, this.fireButton.y);
-
         ctx.restore();
     }
 }
