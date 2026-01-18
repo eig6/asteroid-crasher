@@ -255,7 +255,14 @@ class Game {
             this.player.update(deltaTime, this.input, this.canvas.width, this.canvas.height, this.touchControls);
 
             // Handle shooting (mouse click, spacebar, or touch fire button)
-            const isShooting = this.input.isMouseDown() || this.input.isKeyDown('Space') || this.touchControls.isFirePressed();
+            // On touch devices: only use touchControls.isFirePressed() to avoid joystick triggering shots
+            // On desktop: use mouse and keyboard
+            let isShooting;
+            if (this.touchControls.enabled && this.touchControls.active) {
+                isShooting = this.touchControls.isFirePressed() || this.input.isKeyDown('Space');
+            } else {
+                isShooting = this.input.isMouseDown() || this.input.isKeyDown('Space');
+            }
             if (isShooting && this.player.canShoot(this.gameTime)) {
                 const bullet = this.player.shoot(this.gameTime);
                 this.bullets.push(bullet);
