@@ -121,19 +121,24 @@ class TouchControls {
         const x = touch.clientX - rect.left;
         const y = touch.clientY - rect.top;
 
-        // Check if touch is on left side (joystick area) and joystick not already active
-        if (x < this.canvas.width * 0.4 && this.joystick.touchId === null) {
-            this.joystick.active = true;
-            this.joystick.touchId = touch.identifier;
-            this.joystick.baseX = x;
-            this.joystick.baseY = y;
-            this.joystick.stickX = x;
-            this.joystick.stickY = y;
+        // Check if touch is in joystick area (left 40%)
+        const inJoystickArea = x < this.canvas.width * 0.4;
+
+        if (inJoystickArea) {
+            // Joystick area - only use for joystick, never for firing
+            if (this.joystick.touchId === null) {
+                this.joystick.active = true;
+                this.joystick.touchId = touch.identifier;
+                this.joystick.baseX = x;
+                this.joystick.baseY = y;
+                this.joystick.stickX = x;
+                this.joystick.stickY = y;
+            }
+            // If joystick already active, ignore this touch
         } else if (this.fireButton.touchId === null) {
-            // Any other touch is for firing/aiming
+            // Outside joystick area - use for firing/aiming
             this.fireButton.active = true;
             this.fireButton.touchId = touch.identifier;
-            // Update aim position
             this.aimX = x;
             this.aimY = y;
         }
