@@ -48,10 +48,8 @@ class TouchControls {
 
     setActive(active) {
         this.active = active;
-        // Reset touch states when deactivating to prevent stale state
-        if (!active) {
-            this.reset();
-        }
+        // Always reset touch states to prevent stale state carrying over
+        this.reset();
     }
 
     reset() {

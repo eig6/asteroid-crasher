@@ -159,6 +159,9 @@ class Game {
         this.lives = CONSTANTS.GAME.STARTING_LIVES;
         this.gameTime = 0;
 
+        // Reset input state to prevent carried-over touches/clicks
+        this.input.reset();
+
         // Reset level manager
         this.levelManager.reset();
 

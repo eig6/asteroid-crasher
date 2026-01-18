@@ -103,4 +103,10 @@ class InputManager {
     update() {
         this.mouseClicked = false;
     }
+
+    // Full reset (call when starting new game)
+    reset() {
+        this.mouseDown = false;
+        this.mouseClicked = false;
+    }
 }
