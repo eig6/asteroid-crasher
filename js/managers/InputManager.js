@@ -50,29 +50,28 @@ class InputManager {
             this.mouseDown = false;
         });
 
-        // Touch support for mobile
+        // Touch support for mobile (don't preventDefault - let TouchControls handle that during gameplay)
         this.canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
             const touch = e.touches[0];
             const rect = this.canvas.getBoundingClientRect();
             this.mouseX = touch.clientX - rect.left;
             this.mouseY = touch.clientY - rect.top;
             this.mouseDown = true;
             this.mouseClicked = true;
-        });
+        }, { passive: true });
 
         this.canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = this.canvas.getBoundingClientRect();
-            this.mouseX = touch.clientX - rect.left;
-            this.mouseY = touch.clientY - rect.top;
-        });
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                const rect = this.canvas.getBoundingClientRect();
+                this.mouseX = touch.clientX - rect.left;
+                this.mouseY = touch.clientY - rect.top;
+            }
+        }, { passive: true });
 
         this.canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
             this.mouseDown = false;
-        });
+        }, { passive: true });
 
         // Prevent context menu on right click
         this.canvas.addEventListener('contextmenu', (e) => {

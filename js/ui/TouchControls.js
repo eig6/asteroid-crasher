@@ -6,6 +6,7 @@ class TouchControls {
         // Detect touch device
         this.isTouchDevice = this.detectTouch();
         this.enabled = this.isTouchDevice;
+        this.active = false; // Only active during gameplay
 
         // Joystick state (left side)
         this.joystick = {
@@ -45,6 +46,10 @@ class TouchControls {
                (navigator.msMaxTouchPoints > 0);
     }
 
+    setActive(active) {
+        this.active = active;
+    }
+
     updateLayout() {
         const padding = 40;
         const bottomOffset = 120;
@@ -67,7 +72,7 @@ class TouchControls {
     setupEventListeners() {
         // Touch start
         this.canvas.addEventListener('touchstart', (e) => {
-            if (!this.enabled) return;
+            if (!this.enabled || !this.active) return;
             e.preventDefault();
 
             for (const touch of e.changedTouches) {
@@ -77,7 +82,7 @@ class TouchControls {
 
         // Touch move
         this.canvas.addEventListener('touchmove', (e) => {
-            if (!this.enabled) return;
+            if (!this.enabled || !this.active) return;
             e.preventDefault();
 
             for (const touch of e.changedTouches) {
@@ -87,7 +92,7 @@ class TouchControls {
 
         // Touch end
         this.canvas.addEventListener('touchend', (e) => {
-            if (!this.enabled) return;
+            if (!this.enabled || !this.active) return;
             e.preventDefault();
 
             for (const touch of e.changedTouches) {
@@ -97,7 +102,7 @@ class TouchControls {
 
         // Touch cancel
         this.canvas.addEventListener('touchcancel', (e) => {
-            if (!this.enabled) return;
+            if (!this.enabled || !this.active) return;
             e.preventDefault();
 
             for (const touch of e.changedTouches) {
@@ -212,7 +217,7 @@ class TouchControls {
     }
 
     draw(ctx) {
-        if (!this.enabled) return;
+        if (!this.enabled || !this.active) return;
 
         ctx.save();
 

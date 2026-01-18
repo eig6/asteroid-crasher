@@ -84,6 +84,25 @@ class Game {
                 }
             }
         });
+
+        // Handle touch for menus (since touchstart preventDefault blocks click)
+        this.canvas.addEventListener('touchstart', (e) => {
+            this.audio.resume();
+
+            if (this.menu.isActive()) {
+                // Update input position from touch
+                const touch = e.touches[0];
+                const rect = this.canvas.getBoundingClientRect();
+                this.input.mouseX = touch.clientX - rect.left;
+                this.input.mouseY = touch.clientY - rect.top;
+
+                const clickedButton = this.menu.checkClick();
+                if (clickedButton) {
+                    e.preventDefault();
+                    this.handleMenuClick(clickedButton);
+                }
+            }
+        }, { passive: false });
     }
 
     handleMenuClick(buttonId) {
@@ -150,12 +169,16 @@ class Game {
 
         // Hide menu
         this.menu.hide();
+
+        // Activate touch controls
+        this.touchControls.setActive(true);
     }
 
     pause() {
         if (this.state === 'playing') {
             this.state = 'paused';
             this.menu.showPauseMenu();
+            this.touchControls.setActive(false);
         }
     }
 
@@ -163,11 +186,13 @@ class Game {
         if (this.state === 'paused') {
             this.state = 'playing';
             this.menu.hide();
+            this.touchControls.setActive(true);
         }
     }
 
     gameOver() {
         this.state = 'gameOver';
+        this.touchControls.setActive(false);
 
         // Check for new high score
         const isNewHighScore = this.score > this.highScore;
