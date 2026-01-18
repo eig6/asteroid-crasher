@@ -1,16 +1,29 @@
 {
-  "name": "astroid-crasher",
+  "name": "asteroid-crasher",
   "version": "1.0.0",
-  "description": "",
-  "main": "service-worker.js",
+  "description": "A fun 2D asteroid shooter game with touch controls and PWA support",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate-icons": "node scripts/generate-icons.js",
+    "serve": "npx serve ."
   },
-  "keywords": [],
+  "keywords": [
+    "game",
+    "asteroids",
+    "html5",
+    "canvas",
+    "pwa",
+    "mobile"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
-  "dependencies": {
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eig6/asteroid-crasher.git"
+  },
+  "homepage": "https://brightgames.online",
+  "devDependencies": {
     "canvas": "^3.2.1"
   }
 }
