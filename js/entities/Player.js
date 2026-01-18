@@ -73,16 +73,19 @@ class Player {
         this.y = Math.max(this.radius, Math.min(canvasHeight - this.radius, this.y));
 
         // Update rotation to face mouse or touch aim
-        let aimX, aimY;
-        if (touchControls && touchControls.enabled && touchControls.isFirePressed()) {
-            const aimPos = touchControls.getAimPosition();
-            aimX = aimPos.x;
-            aimY = aimPos.y;
+        // On touch devices: only update aim when second touch (fire) is active
+        // On desktop: always aim at mouse
+        if (touchControls && touchControls.enabled && touchControls.active) {
+            // Touch device - only aim when firing
+            if (touchControls.isFirePressed()) {
+                const aimPos = touchControls.getAimPosition();
+                this.rotation = Math.atan2(aimPos.y - this.y, aimPos.x - this.x);
+            }
+            // Otherwise keep current rotation
         } else {
-            aimX = input.mouseX;
-            aimY = input.mouseY;
+            // Desktop - always aim at mouse
+            this.rotation = Math.atan2(input.mouseY - this.y, input.mouseX - this.x);
         }
-        this.rotation = Math.atan2(aimY - this.y, aimX - this.x);
 
         // Track if thrusting for particles
         this.isThrusting = Math.abs(moveX) > 0.1 || Math.abs(moveY) > 0.1;
