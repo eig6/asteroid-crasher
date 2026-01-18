@@ -85,22 +85,42 @@ class Game {
             }
         });
 
-        // Handle touch for menus (since touchstart preventDefault blocks click)
+        // Handle touch for menus - use touchend for more reliable button activation
+        this.menuTouchStartButton = null;
+
         this.canvas.addEventListener('touchstart', (e) => {
             this.audio.resume();
 
             if (this.menu.isActive()) {
-                // Update input position from touch
                 const touch = e.touches[0];
                 const rect = this.canvas.getBoundingClientRect();
                 this.input.mouseX = touch.clientX - rect.left;
                 this.input.mouseY = touch.clientY - rect.top;
 
-                const clickedButton = this.menu.checkClick();
-                if (clickedButton) {
+                // Remember which button the touch started on
+                this.menuTouchStartButton = this.menu.checkClick();
+
+                if (this.menuTouchStartButton) {
                     e.preventDefault();
-                    this.handleMenuClick(clickedButton);
                 }
+            }
+        }, { passive: false });
+
+        this.canvas.addEventListener('touchend', (e) => {
+            if (this.menu.isActive() && this.menuTouchStartButton) {
+                const touch = e.changedTouches[0];
+                const rect = this.canvas.getBoundingClientRect();
+                this.input.mouseX = touch.clientX - rect.left;
+                this.input.mouseY = touch.clientY - rect.top;
+
+                // Check if touch ended on the same button it started on
+                const endButton = this.menu.checkClick();
+                if (endButton && endButton === this.menuTouchStartButton) {
+                    this.handleMenuClick(endButton);
+                }
+
+                this.menuTouchStartButton = null;
+                e.preventDefault();
             }
         }, { passive: false });
     }
