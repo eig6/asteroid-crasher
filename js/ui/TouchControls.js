@@ -48,6 +48,24 @@ class TouchControls {
 
     setActive(active) {
         this.active = active;
+        // Reset touch states when deactivating to prevent stale state
+        if (!active) {
+            this.reset();
+        }
+    }
+
+    reset() {
+        // Reset joystick
+        this.joystick.active = false;
+        this.joystick.touchId = null;
+        this.joystick.inputX = 0;
+        this.joystick.inputY = 0;
+        this.joystick.stickX = this.joystick.baseX;
+        this.joystick.stickY = this.joystick.baseY;
+
+        // Reset fire button
+        this.fireButton.active = false;
+        this.fireButton.touchId = null;
     }
 
     updateLayout() {
